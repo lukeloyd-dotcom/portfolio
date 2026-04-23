@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  background: #0A1628;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.scene {
+  perspective: 1200px;
+  width: 600px;
+  height: 420px;
+  position: relative;
+}
+
+.macbook {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.lid {
+  width: 560px;
+  height: 360px;
+  background: linear-gradient(135deg, #C8C8C8, #A0A0A0);
+  border-radius: 12px 12px 2px 2px;
+  position: absolute;
+  top: 0;
+  left: 20px;
+  transform-origin: bottom center;
+  transform: rotateX(-130deg);
+  transform-style: preserve-3d;
+  transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1);
+  backface-visibility: visible;
+}
+
+.lid.open {
+  transform: rotateX(-15deg);
+}
+
+.screen {
+  position: absolute;
+  inset: 16px 16px 8px 16px;
+  background: #0D1B2A;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: sans-serif;
+}
+
+.base {
+  width: 600px;
+  height: 28px;
+  background: linear-gradient(180deg, #B0B0B0, #909090);
+  border-radius: 0 0 8px 8px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+</style>
+</head>
+<body>
+<div class="scene">
+  <div class="macbook">
+    <div class="lid" id="lid">
+      <div class="screen">Hello from screen</div>
+    </div>
+    <div class="base"></div>
+  </div>
+</div>
+
+<script>
+setTimeout(function() {
+  document.getElementById('lid').classList.add('open');
+}, 500);
+</script>
+</body>
+</html>
