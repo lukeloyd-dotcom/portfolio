@@ -1050,7 +1050,7 @@
     }
     .projects-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 24px;
     }
     .project-card {
@@ -1500,9 +1500,11 @@
           <div class="project-tag">Startup</div>
           <h3 class="project-name">TheLocalGrid</h3>
           <p class="project-desc">
-            A company I started to help small San Antonio businesses grow their
-            online presence. I handle strategy, client relationships, and operations.
-            Built from scratch — no funding, no template. Still running and evolving.
+            A company started by me and my co-founder Brandon. We want to solve the gap
+            between small businesses and websites — replacing the big price point everyone
+            is used to. We combine websites with photography that I take and work to make
+            sure our clients are satisfied. To me, startups aren't just about making money,
+            it's about making a real, positive change in the community.
           </p>
           <a href="javascript:void(0)" class="project-link">
             Explore <span class="project-link-arrow">↗</span>
@@ -1513,25 +1515,14 @@
           <div class="project-tag">Leadership</div>
           <h3 class="project-name">DECA Chapter President</h3>
           <p class="project-desc">
-            Elected president of my school's DECA chapter. I recruit and organize
-            members, run weekly case prep sessions, and lead the chapter at district
-            and state competitions in finance, marketing, and business strategy.
+            Elected president of my school's DECA chapter. I work hard to rebuild our
+            chapter from little participation to a system. I run my chapter like a
+            business — making sure every single role is coming together and building
+            something amazing. My goal is to leave my school's DECA chapter as a club
+            where students can learn more about business and have a real interest.
           </p>
           <a href="javascript:void(0)" class="project-link">
             Learn More <span class="project-link-arrow">↗</span>
-          </a>
-        </div>
-
-        <div class="project-card reveal reveal-delay-3">
-          <div class="project-tag">Finance</div>
-          <h3 class="project-name">Financial Analysis Portfolio</h3>
-          <p class="project-desc">
-            A self-directed collection of accounting notes, market breakdowns, and
-            financial concepts I'm working through — income statement analysis, basic
-            valuation, and cash flow modeling. Built for my own growth, documented here.
-          </p>
-          <a href="javascript:void(0)" class="project-link">
-            View Portfolio <span class="project-link-arrow">↗</span>
           </a>
         </div>
 
@@ -1696,7 +1687,6 @@
       const text = 'Finance. Strategy.\nFiguring it out.';
       const cursor = '<span class="cursor"></span>';
       let i = 0;
-      let started = false;
 
       function type() {
         if (i <= text.length) {
@@ -1783,11 +1773,8 @@
         if (!entries[0].isIntersecting) return;
         lidObs.disconnect();
         lid.classList.add('open');
-        // fade in screen content when lid finishes (2.2s)
         setTimeout(() => defaultEl.classList.add('visible'), 2200);
-        // start floating animation after lid is fully open
         setTimeout(() => macbook.classList.add('floating'), 2400);
-        // fade in view-all link shortly after
         setTimeout(() => viewAll && viewAll.classList.add('show'), 2700);
       }, { threshold: 0.3 });
       lidObs.observe(macbook);
@@ -1903,7 +1890,6 @@
       const btn  = form.querySelector('.btn-send');
 
       form.addEventListener('submit', e => {
-        // Only intercept if action still has the placeholder
         if (form.action.includes('REPLACE_WITH_YOUR_ID')) {
           e.preventDefault();
           btn.textContent = 'Add your Formspree ID first!';
@@ -1914,7 +1900,6 @@
           }, 3000);
           return;
         }
-        // Real Formspree — let it submit, but show feedback
         btn.textContent = 'Sending…';
         btn.disabled = true;
       });
@@ -1924,7 +1909,6 @@
     document.querySelectorAll('a[href^="#"]').forEach(link => {
       link.addEventListener('click', e => {
         const href = link.getAttribute('href');
-        // Skip bare "#" or "javascript:" links
         if (!href || href === '#' || href.startsWith('javascript')) return;
         let target;
         try { target = document.querySelector(href); } catch (_) { return; }
