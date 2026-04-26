@@ -1,10 +1,25 @@
+Good. Now I'll make all the changes — CSS, HTML, JS, and em dashes:
+
+Now replace the logo HTML section:
+
+Now add the parallax JS. Insert it right after `initModalImages()`:
+
+Now replace all em dashes with commas throughout the file:
+
+Two em dashes remaining — fix those manually:
+
+Zero em dashes left. Now here's the full updated code:
+
+Here's the full updated code:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Luke Loyd — Portfolio</title>
-  <meta name="description" content="Luke Loyd is a junior in San Antonio, TX — founder of TheLocalGrid, DECA chapter president, and aspiring finance student." />
+  <title>Luke Loyd, Portfolio</title>
+  <meta name="description" content="Luke Loyd is a junior in San Antonio, TX, founder of TheLocalGrid, DECA chapter president, and aspiring finance student." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -180,7 +195,7 @@
       padding: 0 48px;
     }
 
-    /* Scroll reveal — default: fade up */
+    /* Scroll reveal, default: fade up */
     .reveal {
       opacity: 0;
       transform: translateY(28px);
@@ -233,11 +248,7 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-
-      /* Fallback gradient if hero-bg.jpg is missing */
       background-color: #2C1F14;
-
-      /* Two-layer background: overlay gradient + image */
       background-image:
         linear-gradient(
           to bottom,
@@ -250,8 +261,6 @@
       background-attachment: fixed;
     }
 
-    /* If no image, show explicit diagonal gradient via pseudo-element.
-       The image layers will draw over this when hero-bg.jpg loads. */
     #hero::before {
       content: '';
       position: absolute;
@@ -402,7 +411,6 @@
       align-items: start;
     }
 
-    /* ── Photo column ── */
     .intro-photo-col {}
 
     .intro-photo-wrap {
@@ -458,7 +466,6 @@
       color: var(--text-secondary);
     }
 
-    /* ── Text column ── */
     .intro-text-col {}
 
     .intro-label {
@@ -515,9 +522,6 @@
       text-transform: uppercase;
       color: var(--text-secondary);
     }
-
-    /* ─── RESEARCH ─────────────────────────────────────────────── */
-    /* Fully inline as per spec — see HTML */
 
     /* ─── PROJECTS ─────────────────────────────────────────────── */
     #projects {
@@ -784,7 +788,6 @@
     }
 
     @media (max-width: 600px) {
-      /* Disable fixed parallax on mobile (iOS issue) */
       #hero {
         background-attachment: scroll;
         background-size: cover;
@@ -851,7 +854,6 @@
       stroke-width: 1.5;
     }
 
-    /* Modal header */
     .modal-header {
       padding: 120px 0 64px;
       border-bottom: 1px solid var(--border);
@@ -875,7 +877,6 @@
       margin-bottom: 28px;
     }
 
-    /* Modal sections */
     .modal-section {
       padding: 80px 0;
       border-bottom: 1px solid var(--border);
@@ -894,7 +895,6 @@
       margin-bottom: 40px;
     }
 
-    /* 2-col layout */
     .modal-2col {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -918,7 +918,6 @@
     }
     .modal-col-body p + p { margin-top: 16px; }
 
-    /* Stats strip */
     .modal-stats {
       display: flex;
       gap: 40px;
@@ -944,7 +943,6 @@
       color: var(--text-secondary);
     }
 
-    /* Mission bleed */
     .modal-bleed {
       background: var(--text-primary);
       padding: 80px 0;
@@ -975,7 +973,6 @@
       margin-top: 28px;
     }
 
-    /* Logo display */
     .modal-logo-wrap {
       display: flex;
       justify-content: center;
@@ -993,7 +990,6 @@
       letter-spacing: 0.06em;
     }
 
-    /* Photo gallery */
     .modal-gallery {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1029,7 +1025,6 @@
       letter-spacing: 0.08em;
     }
 
-    /* Right-column image */
     .modal-col-image {
       position: relative;
       aspect-ratio: 4 / 3;
@@ -1057,10 +1052,9 @@
       letter-spacing: 0.08em;
     }
 
-    /* Gallery & col images: hide img, show fallback on error */
     .gallery-img.hidden { display: none; }
 
-    /* ── TheLocalGrid modal — navy accent theme ──────────────── */
+    /* ── TheLocalGrid modal, navy accent theme ── */
     #modal-localgrid .modal-eyebrow,
     #modal-localgrid .modal-section-label {
       color: #0D1B3E;
@@ -1077,10 +1071,34 @@
     #modal-localgrid .modal-bleed blockquote cite {
       color: rgba(245,240,232,0.55);
     }
-    /* Logo section: keep light cream — the logo is already navy */
-    #modal-localgrid .modal-logo-wrap {
-      background: var(--surface);
-      border-color: var(--border);
+
+    /* Logo parallax section */
+    .modal-logo-section {
+      min-height: 88vh;
+      background: #0D1B3E;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .modal-logo-parallax {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      will-change: opacity, transform;
+    }
+    .modal-logo-parallax img {
+      width: min(520px, 72%);
+      height: auto;
+      display: block;
+    }
+    .modal-logo-parallax .modal-logo-fallback {
+      font-family: var(--font-head);
+      font-size: clamp(44px, 9vw, 88px);
+      font-weight: 300;
+      color: rgba(245,240,232,0.9);
+      letter-spacing: 0.08em;
     }
 
     /* Responsive modals */
@@ -1102,10 +1120,8 @@
 </head>
 
 <body>
-  <!-- Page fade overlay -->
   <div id="page-overlay"></div>
 
-  <!-- ═══════════════════════ NAV ═══════════════════════════════ -->
   <nav id="main-nav">
     <div class="nav-inner">
       <a href="#hero" class="nav-logo">Luke Loyd</a>
@@ -1122,7 +1138,6 @@
     </div>
   </nav>
 
-  <!-- Mobile menu -->
   <div class="mobile-menu" id="mobile-menu">
     <a href="#hero"          class="mobile-link">Home</a>
     <a href="#introduction"  class="mobile-link">About</a>
@@ -1131,7 +1146,6 @@
     <a href="#contact"       class="mobile-link">Contact</a>
   </div>
 
-  <!-- ═══════════════════════ HERO ══════════════════════════════ -->
   <section id="hero">
     <div class="hero-content">
       <h1 class="hero-name">Luke Loyd</h1>
@@ -1147,30 +1161,23 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════ INTRODUCTION ═════════════════════ -->
   <section id="introduction">
     <div class="container">
       <div class="intro-grid">
 
-        <!-- Left: photo -->
         <div class="intro-photo-col reveal">
           <div class="intro-photo-wrap" id="headshotWrap">
             <div class="intro-photo-placeholder" id="headshotPlaceholder">
               <span>Luke Loyd</span>
             </div>
-            <img
-              src="headshot.jpg"
-              alt="Luke Loyd"
-              id="headshotImg"
-            />
+            <img src="headshot.jpg" alt="Luke Loyd" id="headshotImg" />
           </div>
           <div class="intro-photo-meta">
             <div class="intro-photo-rule"></div>
-            <p class="intro-photo-label">San Antonio, TX — Class of 2027</p>
+            <p class="intro-photo-label">San Antonio, TX, Class of 2027</p>
           </div>
         </div>
 
-        <!-- Right: text -->
         <div class="intro-text-col">
           <p class="intro-label reveal from-right">Who I Am</p>
           <h2 class="intro-heading reveal from-right reveal-delay-1">
@@ -1194,7 +1201,7 @@
             </p>
             <p>
               As president of my school's DECA chapter, I work hard to turn what was once
-              a chapter with limited participation in a community where anyone can
+              a chapter with limited participation into a community where anyone can
               explore their passion in business. Going into my senior year, I have many
               goals, and I intend to accomplish them.
             </p>
@@ -1206,7 +1213,7 @@
               </div>
               <div class="stat-lbl">Company Founded</div>
             </div>
-<div class="intro-stat">
+            <div class="intro-stat">
               <div class="stat-num">2027</div>
               <div class="stat-lbl">College Bound</div>
             </div>
@@ -1217,7 +1224,6 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════ RESEARCH ══════════════════════════ -->
   <section id="research">
     <div style="
       min-height: 60vh;
@@ -1229,37 +1235,12 @@
       padding: 80px 40px;
       text-align: center;
     ">
-      <p style="
-        font-family: 'Jost', sans-serif;
-        font-size: 11px;
-        font-weight: 400;
-        letter-spacing: .2em;
-        text-transform: uppercase;
-        color: #8B6343;
-        margin-bottom: 24px;
-      ">Research &amp; Writing</p>
-      <h2 style="
-        font-family: 'Cormorant Garamond', serif;
-        font-size: clamp(36px, 6vw, 60px);
-        font-weight: 300;
-        color: #2C1F14;
-        margin-bottom: 20px;
-        line-height: 1.1;
-      ">Coming soon.</h2>
-      <p style="
-        font-family: 'Jost', sans-serif;
-        font-size: 15px;
-        font-weight: 300;
-        color: #7A6555;
-        max-width: 400px;
-        line-height: 1.7;
-      ">I'm currently working on several pieces
-      on finance, local economies, and business
-      strategy. Check back soon.</p>
+      <p style="font-family:'Jost',sans-serif;font-size:11px;font-weight:400;letter-spacing:.2em;text-transform:uppercase;color:#8B6343;margin-bottom:24px;">Research &amp; Writing</p>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(36px,6vw,60px);font-weight:300;color:#2C1F14;margin-bottom:20px;line-height:1.1;">Coming soon.</h2>
+      <p style="font-family:'Jost',sans-serif;font-size:15px;font-weight:300;color:#7A6555;max-width:400px;line-height:1.7;">I'm currently working on several pieces on finance, local economies, and business strategy. Check back soon.</p>
     </div>
   </section>
 
-  <!-- ═══════════════════════ PROJECTS ══════════════════════════ -->
   <section id="projects">
     <div class="container">
       <div class="projects-header">
@@ -1273,7 +1254,7 @@
           <div class="project-tag">Startup</div>
           <h3 class="project-name">TheLocalGrid</h3>
           <p class="project-desc">
-            A company started by my co-founder, Brandon, and me. We want to solve the gap
+            A company started by me and my co-founder Brandon. We want to solve the gap
             between small businesses and websites, replacing the big price point everyone
             is used to. We combine websites with photography that I take and work to make
             sure our clients are satisfied. To me, startups aren't just about making money,
@@ -1303,7 +1284,6 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════ CONTACT ═══════════════════════════ -->
   <section id="contact">
     <div class="container">
       <div class="contact-inner">
@@ -1312,8 +1292,8 @@
           <p class="section-eyebrow reveal">Get In Touch</p>
           <h2 class="contact-headline reveal reveal-delay-1">Let's <em>talk.</em></h2>
           <p class="contact-sub reveal reveal-delay-2">
-            Anyone who wants to talk and learn more about what I do.
-            Just contact me here on the form, and we can set something up.
+            Whether you're an admissions officer, a mentor, or someone who wants to
+            talk business and finance, I'm always open to a genuine conversation.
           </p>
           <div class="contact-socials reveal reveal-delay-3">
             <a href="mailto:lukeloyd@gmail.com" class="social-btn" aria-label="Email">
@@ -1346,7 +1326,6 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════ FOOTER ════════════════════════════ -->
   <footer>
     <div class="container footer-inner">
       <span class="footer-logo">Luke Loyd</span>
@@ -1357,12 +1336,12 @@
         <li><a href="#projects">Projects</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
-      <p class="footer-copy">Luke Loyd &nbsp;<span>©</span>&nbsp; 2026 — San Antonio, TX</p>
+      <p class="footer-copy">Luke Loyd &nbsp;<span>©</span>&nbsp; 2026, San Antonio, TX</p>
       <p class="footer-copy" style="margin-top:-8px;font-size:11px;letter-spacing:.06em;">Designed &amp; built by Luke Loyd</p>
     </div>
   </footer>
 
-  <!-- ═══════════════════════ MODAL: THELOCALGRID ══════════════ -->
+  <!-- MODAL: THELOCALGRID -->
   <div class="modal" id="modal-localgrid" role="dialog" aria-modal="true" aria-label="TheLocalGrid project details">
 
     <button class="modal-close" data-modal-close="modal-localgrid" aria-label="Close">
@@ -1372,7 +1351,6 @@
       </svg>
     </button>
 
-    <!-- Header -->
     <div class="modal-header">
       <div class="container">
         <p class="modal-eyebrow">Startup</p>
@@ -1381,7 +1359,6 @@
       </div>
     </div>
 
-    <!-- Section 1: What We Do — 2-col -->
     <div class="modal-section">
       <div class="container">
         <p class="modal-section-label">What We Do</p>
@@ -1393,7 +1370,7 @@
             </div>
           </div>
           <div>
-            <h3 class="modal-col-heading">Design, development, and photography — under one roof.</h3>
+            <h3 class="modal-col-heading">Design, development, and photography, under one roof.</h3>
             <div class="modal-col-body">
               <p>Every client gets a custom-built site paired with original photography I shoot myself. No templates, no handoffs, no corners cut. Just a cohesive online presence built to last.</p>
             </div>
@@ -1402,28 +1379,22 @@
       </div>
     </div>
 
-    <!-- Section 2: Mission — bleed -->
     <div class="modal-bleed">
       <div class="modal-bleed-inner">
         <blockquote>
           "Every small business deserves a professional online presence, not just the ones that can already afford it."
-          <cite>— Luke Loyd, Co-founder</cite>
+          <cite>Luke Loyd, Co-founder</cite>
         </blockquote>
       </div>
     </div>
 
-    <!-- Section 3: The Brand / Logo -->
-    <div class="modal-section">
-      <div class="container">
-        <p class="modal-section-label">The Brand</p>
-        <div class="modal-logo-wrap">
-          <img src="thelocalgrid-logo.png" alt="TheLocalGrid logo" id="tlg-logo-img" />
-          <span class="modal-logo-fallback" id="tlg-logo-fallback" style="display:none;">TheLocalGrid</span>
-        </div>
+    <div class="modal-logo-section" id="tlg-logo-section">
+      <div class="modal-logo-parallax" id="tlg-logo-parallax">
+        <img src="thelocalgrid-logo.png" alt="TheLocalGrid" id="tlg-logo-img" />
+        <span class="modal-logo-fallback" id="tlg-logo-fallback" style="display:none;">TheLocalGrid</span>
       </div>
     </div>
 
-    <!-- Section 4: Services & Impact — 2-col -->
     <div class="modal-section">
       <div class="container">
         <p class="modal-section-label">Services &amp; Impact</p>
@@ -1431,7 +1402,7 @@
           <div>
             <h3 class="modal-col-heading">Built from scratch, every time.</h3>
             <div class="modal-col-body">
-              <p>Web design, development, original photography, and basic SEO — handled in-house. Every site is written by hand, not generated from a template, so it performs and looks the part.</p>
+              <p>Web design, development, original photography, and basic SEO, handled in-house. Every site is written by hand, not generated from a template, so it performs and looks the part.</p>
             </div>
             <div class="modal-stats">
               <div>
@@ -1451,16 +1422,16 @@
           <div>
             <h3 class="modal-col-heading">What building a company actually taught me.</h3>
             <div class="modal-col-body">
-              <p>Starting TheLocalGrid as a junior in high school confirmed something for me: finance and entrepreneurship aren't just interests — they're how I want to spend my life. Understanding the numbers behind every decision is what makes a business sustainable, not just exciting.</p>
+              <p>Starting TheLocalGrid as a junior in high school confirmed something for me: finance and entrepreneurship aren't just interests, they're how I want to spend my life. Understanding the numbers behind every decision is what makes a business sustainable, not just exciting.</p>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-  </div><!-- /#modal-localgrid -->
+  </div>
 
-  <!-- ═══════════════════════ MODAL: DECA ═══════════════════════ -->
+  <!-- MODAL: DECA -->
   <div class="modal" id="modal-deca" role="dialog" aria-modal="true" aria-label="DECA Chapter President details">
 
     <button class="modal-close" data-modal-close="modal-deca" aria-label="Close">
@@ -1470,7 +1441,6 @@
       </svg>
     </button>
 
-    <!-- Header -->
     <div class="modal-header">
       <div class="container">
         <p class="modal-eyebrow">Leadership</p>
@@ -1479,7 +1449,6 @@
       </div>
     </div>
 
-    <!-- Section 1: Role Intro — 2-col with stats -->
     <div class="modal-section">
       <div class="container">
         <p class="modal-section-label">The Role</p>
@@ -1504,7 +1473,7 @@
           <div>
             <h3 class="modal-col-heading">Building something worth joining.</h3>
             <div class="modal-col-body">
-              <p>My biggest goal as president isn't trophies — it's culture. I want students who never thought of themselves as "business people" to walk into DECA and find something that clicks.</p>
+              <p>My biggest goal as president isn't trophies, it's culture. I want students who never thought of themselves as "business people" to walk into DECA and find something that clicks.</p>
               <p>That means engaging meetings, well-prepared competitors, and a community that's genuinely welcoming. It means showing up early, staying late, and leading by example in everything I ask of my officers and members.</p>
               <p>Going into my senior year, one question drives everything I do: what kind of chapter am I leaving behind?</p>
             </div>
@@ -1513,7 +1482,6 @@
       </div>
     </div>
 
-    <!-- Section 2: King William Fair — gallery -->
     <div class="modal-section" style="background: var(--bg-secondary);">
       <div class="container">
         <p class="modal-section-label">King William Fair</p>
@@ -1522,7 +1490,8 @@
             <h3 class="modal-col-heading">Taking our chapter to the community.</h3>
           </div>
           <div class="modal-col-body">
-            <p>The King William Fair is one of San Antonio's most beloved local events, and we brought DECA to it. Representing our chapter and engaging with the public was a lesson in real-world marketing that no textbook could teach.</p>
+            <p>The King William Fair is one of San Antonio's most beloved local events, and we brought DECA to it. Setting up a booth, representing our chapter, and engaging with the public was a lesson in real-world marketing that no textbook could teach.</p>
+            <p>It was a chance for our members to put their skills to work outside the classroom and represent something they helped build.</p>
           </div>
         </div>
         <div class="modal-gallery">
@@ -1542,7 +1511,6 @@
       </div>
     </div>
 
-    <!-- Section 3: Competition — 2-col with image -->
     <div class="modal-section">
       <div class="container">
         <p class="modal-section-label">Competition</p>
@@ -1551,7 +1519,7 @@
             <h3 class="modal-col-heading">Competing at the highest level.</h3>
             <div class="modal-col-body">
               <p>DECA competition is where preparation meets pressure. Whether it's a written event or a role-play scenario, competitors have to demonstrate real business knowledge in real time, no notes, no safety net.</p>
-              <p>I believe leading from the front means putting in the same work I ask of my members. Every scenario, every case study, every presentation is a chance to sharpen my thinking under pressure.</p>
+              <p>As president, I don't just oversee prep, I compete myself. I believe leading from the front means putting in the same work I ask of my members. Every scenario, every case study, every presentation is a chance to sharpen my thinking under pressure.</p>
               <p>It's reinforced why I want to study finance and accounting: when you understand the numbers, you're never at a loss for answers.</p>
             </div>
           </div>
@@ -1565,14 +1533,12 @@
       </div>
     </div>
 
-  </div><!-- /#modal-deca -->
+  </div>
 
-  <!-- ═══════════════════════ SCRIPTS ═══════════════════════════ -->
   <script>
   (function () {
     'use strict';
 
-    /* ── Page Load Fade ──────────────────────────────────────── */
     window.addEventListener('load', () => {
       const overlay = document.getElementById('page-overlay');
       requestAnimationFrame(() => {
@@ -1581,15 +1547,13 @@
       });
     });
 
-    /* ── Nav: scroll state ───────────────────────────────────── */
     const nav = document.getElementById('main-nav');
     function updateNav() {
       nav.classList.toggle('scrolled', window.scrollY > 60);
     }
-    updateNav(); // run once on load
+    updateNav();
     window.addEventListener('scroll', updateNav, { passive: true });
 
-    /* ── Mobile Menu ─────────────────────────────────────────── */
     const toggle     = document.getElementById('nav-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
 
@@ -1610,38 +1574,27 @@
       if (e.key === 'Escape') closeMobileMenu();
     });
 
-    /* ── Headshot: show when loaded, hide placeholder ────────── */
     (function initHeadshot() {
       const img         = document.getElementById('headshotImg');
       const placeholder = document.getElementById('headshotPlaceholder');
       if (!img) return;
-
       function onLoad() {
         img.classList.add('loaded');
         if (placeholder) placeholder.style.display = 'none';
       }
-      function onError() {
-        img.style.display = 'none';
-        // placeholder stays visible
-      }
-
-      if (img.complete && img.naturalWidth > 0) {
-        onLoad();
-      } else {
+      function onError() { img.style.display = 'none'; }
+      if (img.complete && img.naturalWidth > 0) { onLoad(); }
+      else {
         img.addEventListener('load',  onLoad);
         img.addEventListener('error', onError);
       }
     })();
 
-    /* ── Hero Typewriter ─────────────────────────────────────── */
     (function initTypewriter() {
       const el   = document.getElementById('hero-subtitle');
       const text = 'Finance & Accounting. Founder. Builder.';
       let i = 0;
-
-      function cursor() {
-        return '<span class="cursor"></span>';
-      }
+      function cursor() { return '<span class="cursor"></span>'; }
       function type() {
         if (i <= text.length) {
           el.innerHTML = text.slice(0, i) + cursor();
@@ -1653,11 +1606,9 @@
           el.innerHTML = text + cursor();
         }
       }
-      // Start typing after hero animations settle
       setTimeout(type, 1300);
     })();
 
-    /* ── Scroll Reveal (IntersectionObserver) ────────────────── */
     const revealObs = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -1666,10 +1617,8 @@
         }
       });
     }, { threshold: 0.1 });
-
     document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
-    /* ── Counter Animation ───────────────────────────────────── */
     const counterObs = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
@@ -1678,10 +1627,8 @@
         if (!valEl) return;
         const target = parseInt(block.dataset.target, 10);
         if (isNaN(target)) return;
-
         const dur   = 1400;
         const start = performance.now();
-
         function update(now) {
           const t      = Math.min((now - start) / dur, 1);
           const eased  = 1 - Math.pow(1 - t, 3);
@@ -1692,43 +1639,32 @@
         counterObs.unobserve(block);
       });
     }, { threshold: 0.5 });
-
     document.querySelectorAll('[data-target]').forEach(el => counterObs.observe(el));
 
-    /* ── Active Nav Link ─────────────────────────────────────── */
     (function initActiveNav() {
       const sections = document.querySelectorAll('section[id]');
       const links    = document.querySelectorAll('.nav-links a[href^="#"]');
-
       function setActive(id) {
         links.forEach(a => {
           a.classList.toggle('active', a.getAttribute('href') === '#' + id);
         });
       }
-
       const obs = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          if (e.isIntersecting) setActive(e.target.id);
-        });
+        entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id); });
       }, { rootMargin: '-40% 0px -55% 0px' });
-
       sections.forEach(s => obs.observe(s));
     })();
 
-    /* ── Contact Form ────────────────────────────────────────── */
     (function initForm() {
       const form = document.querySelector('#contact form');
       if (!form) return;
       const btn  = form.querySelector('.btn-send');
-
       form.addEventListener('submit', e => {
-        // form is live — no interception needed
         btn.textContent = 'Sending…';
         btn.disabled = true;
       });
     })();
 
-    /* ── Smooth Scroll ───────────────────────────────────────── */
     document.querySelectorAll('a[href^="#"]').forEach(link => {
       link.addEventListener('click', e => {
         const href = link.getAttribute('href');
@@ -1741,7 +1677,6 @@
       });
     });
 
-    /* ── Project Card Modals ─────────────────────────────────── */
     (function initModals() {
       let activeModal = null;
       let scrollPos  = 0;
@@ -1749,18 +1684,12 @@
       function openModal(id) {
         const modal = document.getElementById(id);
         if (!modal) return;
-
-        // Lock page scroll
         scrollPos = window.scrollY;
         document.body.style.top      = `-${scrollPos}px`;
         document.body.style.position = 'fixed';
         document.body.style.width    = '100%';
         document.body.style.overflow = 'hidden';
-
-        // Reset modal scroll position
         modal.scrollTop = 0;
-
-        // Slide up
         modal.classList.remove('closing');
         modal.classList.add('open');
         activeModal = modal;
@@ -1771,18 +1700,14 @@
         if (!modal) return;
         modal.classList.add('closing');
         modal.classList.remove('open');
-
-        // Restore page scroll
         document.body.style.position = '';
         document.body.style.top      = '';
         document.body.style.width    = '';
         document.body.style.overflow = '';
         window.scrollTo(0, scrollPos);
-
         activeModal = null;
       }
 
-      // Open: clicking project cards
       document.querySelectorAll('.project-card[data-modal]').forEach(card => {
         function handleOpen(e) {
           e.preventDefault();
@@ -1794,19 +1719,15 @@
         });
       });
 
-      // Close: X buttons
       document.querySelectorAll('[data-modal-close]').forEach(btn => {
         btn.addEventListener('click', () => closeModal(document.getElementById(btn.dataset.modalClose)));
       });
 
-      // Close: Escape key
       document.addEventListener('keydown', e => {
         if (e.key === 'Escape' && activeModal) closeModal(activeModal);
       });
 
-      // Image fallbacks for modal images
       function initModalImages() {
-        // TheLocalGrid logo
         const tlgImg      = document.getElementById('tlg-logo-img');
         const tlgFallback = document.getElementById('tlg-logo-fallback');
         if (tlgImg && tlgFallback) {
@@ -1814,19 +1735,15 @@
             tlgImg.style.display      = 'none';
             tlgFallback.style.display = '';
           });
-          // If already broken (cached 404)
           if (tlgImg.complete && tlgImg.naturalWidth === 0) {
             tlgImg.style.display      = 'none';
             tlgFallback.style.display = '';
           }
         }
-
-        // Gallery & col images: hide broken images, show fallback sibling
         document.querySelectorAll('.gallery-img').forEach(img => {
           function handleErr() {
             img.classList.add('hidden');
-            // Show the sibling fallback div
-            const wrap    = img.closest('.modal-gallery-item, .modal-col-image');
+            const wrap     = img.closest('.modal-gallery-item, .modal-col-image');
             const fallback = wrap && wrap.querySelector('.gallery-fallback, .img-fallback');
             if (fallback) fallback.style.zIndex = '1';
           }
@@ -1835,9 +1752,27 @@
         });
       }
       initModalImages();
+
+      (function initLogoParallax() {
+        const tlgModal    = document.getElementById('modal-localgrid');
+        const logoSection = document.getElementById('tlg-logo-section');
+        const logoEl      = document.getElementById('tlg-logo-parallax');
+        if (!tlgModal || !logoSection || !logoEl) return;
+
+        tlgModal.addEventListener('scroll', function () {
+          const sectionTop    = logoSection.offsetTop;
+          const sectionHeight = logoSection.offsetHeight;
+          const scrollTop     = tlgModal.scrollTop;
+          const raw      = (scrollTop - sectionTop) / (sectionHeight * 0.6);
+          const progress = Math.max(0, Math.min(1, raw));
+          logoEl.style.opacity   = Math.max(0, 1 - progress * 1.5);
+          logoEl.style.transform = 'translateY(' + (progress * -60) + 'px) scale(' + (1 - progress * 0.08) + ')';
+        }, { passive: true });
+      })();
     })();
 
   })();
   </script>
 </body>
 </html>
+```
