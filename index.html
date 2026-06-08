@@ -233,7 +233,18 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
+
+      /* Fallback gradient if hero-bg.jpg is missing */
       background-color: #2C1F14;
+    }
+
+    /* Parallax-capable background layer (drifts on mouse).
+       Sits above the ::before fallback gradient, below content. */
+    .hero-bg-layer {
+      position: absolute;
+      inset: -48px;
+      z-index: 0;
+      pointer-events: none;
       background-image:
         linear-gradient(
           to bottom,
@@ -243,9 +254,11 @@
         url('hero-bg.jpg');
       background-size: cover;
       background-position: center;
-      background-attachment: fixed;
+      will-change: transform;
     }
 
+    /* If no image, show explicit diagonal gradient via pseudo-element.
+       The image layers will draw over this when hero-bg.jpg loads. */
     #hero::before {
       content: '';
       position: absolute;
@@ -396,6 +409,7 @@
       align-items: start;
     }
 
+    /* ── Photo column ── */
     .intro-photo-col {}
 
     .intro-photo-wrap {
@@ -451,6 +465,7 @@
       color: var(--text-secondary);
     }
 
+    /* ── Text column ── */
     .intro-text-col {}
 
     .intro-label {
@@ -507,6 +522,9 @@
       text-transform: uppercase;
       color: var(--text-secondary);
     }
+
+    /* ─── RESEARCH ─────────────────────────────────────────────── */
+    /* Fully inline as per spec, see HTML */
 
     /* ─── PROJECTS ─────────────────────────────────────────────── */
     #projects {
@@ -773,6 +791,7 @@
     }
 
     @media (max-width: 600px) {
+      /* Disable fixed parallax on mobile (iOS issue) */
       #hero {
         background-attachment: scroll;
         background-size: cover;
@@ -839,6 +858,7 @@
       stroke-width: 1.5;
     }
 
+    /* Modal header */
     .modal-header {
       padding: 120px 0 64px;
       border-bottom: 1px solid var(--border);
@@ -862,6 +882,7 @@
       margin-bottom: 28px;
     }
 
+    /* Modal sections */
     .modal-section {
       padding: 80px 0;
       border-bottom: 1px solid var(--border);
@@ -880,6 +901,7 @@
       margin-bottom: 40px;
     }
 
+    /* 2-col layout */
     .modal-2col {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -903,6 +925,7 @@
     }
     .modal-col-body p + p { margin-top: 16px; }
 
+    /* Stats strip */
     .modal-stats {
       display: flex;
       gap: 40px;
@@ -928,6 +951,7 @@
       color: var(--text-secondary);
     }
 
+    /* Mission bleed */
     .modal-bleed {
       background: var(--text-primary);
       padding: 80px 0;
@@ -958,6 +982,7 @@
       margin-top: 28px;
     }
 
+    /* Logo display */
     .modal-logo-wrap {
       display: flex;
       justify-content: center;
@@ -975,6 +1000,7 @@
       letter-spacing: 0.06em;
     }
 
+    /* Photo gallery */
     .modal-gallery {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1010,6 +1036,7 @@
       letter-spacing: 0.08em;
     }
 
+    /* Right-column image */
     .modal-col-image {
       position: relative;
       aspect-ratio: 4 / 3;
@@ -1037,9 +1064,10 @@
       letter-spacing: 0.08em;
     }
 
+    /* Gallery & col images: hide img, show fallback on error */
     .gallery-img.hidden { display: none; }
 
-    /* ── TheLocalGrid modal, navy accent theme ── */
+    /* ── TheLocalGrid modal, navy accent theme ──────────────── */
     #modal-localgrid .modal-eyebrow,
     #modal-localgrid .modal-section-label {
       color: #0D1B3E;
@@ -1056,7 +1084,6 @@
     #modal-localgrid .modal-bleed blockquote cite {
       color: rgba(245,240,232,0.55);
     }
-
     /* Logo parallax section */
     .modal-logo-section {
       min-height: 88vh;
@@ -1101,12 +1128,301 @@
       .modal-bleed        { padding: 56px 0; }
       .modal-logo-wrap    { padding: 48px 28px; }
     }
+
+    /* ════════════════════════════════════════════════════════════ */
+    /* ═══ INTERACTION & MOTION UPGRADE ══════════════════════════ */
+    /* ════════════════════════════════════════════════════════════ */
+
+    /* ── 1. Custom cursor ──────────────────────────────────────── */
+    .cursor-dot,
+    .cursor-ring {
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      border-radius: 50%;
+      z-index: 10000;
+      will-change: transform;
+      opacity: 0;
+    }
+    .cursor-dot {
+      width: 8px; height: 8px;
+      margin: -4px 0 0 -4px;
+      background: var(--text-primary);
+      transition: width 0.3s var(--ease), height 0.3s var(--ease),
+                  margin 0.3s var(--ease), opacity 0.3s var(--ease);
+    }
+    .cursor-ring {
+      width: 40px; height: 40px;
+      margin: -20px 0 0 -20px;
+      border: 1px solid var(--accent);
+      mix-blend-mode: difference;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: width 0.3s var(--ease), height 0.3s var(--ease),
+                  margin 0.3s var(--ease), background 0.3s var(--ease),
+                  border-color 0.3s var(--ease), opacity 0.3s var(--ease);
+    }
+    .cursor-label {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--bg-primary);
+      opacity: 0;
+      transition: opacity 0.25s var(--ease);
+    }
+    body.cursor-ready .cursor-dot,
+    body.cursor-ready .cursor-ring { opacity: 1; }
+    /* Link / button hover */
+    body.cursor-link .cursor-dot {
+      width: 16px; height: 16px; margin: -8px 0 0 -8px;
+    }
+    body.cursor-link .cursor-ring {
+      width: 28px; height: 28px; margin: -14px 0 0 -14px;
+    }
+    /* Project card hover → "Open" label */
+    body.cursor-project .cursor-dot { opacity: 0; }
+    body.cursor-project .cursor-ring {
+      width: 64px; height: 64px; margin: -32px 0 0 -32px;
+      background: var(--accent);
+      border-color: var(--accent);
+      mix-blend-mode: normal;
+    }
+    body.cursor-project .cursor-label { opacity: 1; }
+    /* Hide native cursor only when custom cursor is active */
+    html.has-cursor, html.has-cursor * { cursor: none !important; }
+
+    /* ── 2. Scroll progress indicator ──────────────────────────── */
+    .scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0;
+      background: var(--accent);
+      z-index: 9990;
+      opacity: 0;
+      transition: opacity 0.35s var(--ease);
+      will-change: width;
+    }
+    .scroll-progress.visible { opacity: 1; }
+
+    /* ── 3. Film-grain canvas (full page) ──────────────────────── */
+    .grain-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9980;
+      opacity: 0.035;
+    }
+
+    /* ── 4. Section-transition horizontal wipe ─────────────────── */
+    .wipe {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: var(--text-primary);
+      transform: translateX(-100%);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      will-change: transform;
+    }
+    .wipe-label {
+      font-family: var(--font-head);
+      font-size: clamp(40px, 8vw, 90px);
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      color: var(--bg-primary);
+      opacity: 0;
+    }
+    .wipe.active { animation: wipeAcross 0.6s var(--ease) forwards; }
+    .wipe.active .wipe-label { animation: wipeLabel 0.6s var(--ease) forwards; }
+    @keyframes wipeAcross {
+      0%   { transform: translateX(-100%); }
+      48%  { transform: translateX(0); }
+      52%  { transform: translateX(0); }
+      100% { transform: translateX(100%); }
+    }
+    @keyframes wipeLabel {
+      0%, 100% { opacity: 0; }
+      40%, 60% { opacity: 1; }
+    }
+
+    /* ── 5. Hero grain + cinematic char entrance ───────────────── */
+    .hero-grain {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      opacity: 0.08;
+      pointer-events: none;
+      mix-blend-mode: overlay;
+    }
+    /* When JS splits the name into chars, suppress the CSS fade */
+    .hero-name.is-split {
+      opacity: 1;
+      animation: none;
+    }
+    .hero-name .char {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(60px);
+    }
+    .hero-name .char.in {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ── 6. Magnetic buttons + sweep fill ──────────────────────── */
+    .magnetic {
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-hero {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .btn-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: rgba(245,240,232,0.16);
+      transform: translateX(-101%);
+      transition: transform 0.4s var(--ease);
+    }
+    .btn-hero:hover::before { transform: translateX(0); }
+
+    /* ── 7. Heading char reveal + underline draw ───────────────── */
+    .split-line .char {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(0.5em);
+    }
+    .split-line.in .char {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .heading-underline {
+      display: block;
+      height: 2px;
+      width: 0;
+      max-width: 64px;
+      background: var(--accent);
+      margin-top: 18px;
+      transition: width 0.7s var(--ease) 0.35s;
+    }
+    .heading-underline.in { width: 64px; }
+
+    /* ── 8. About: word-by-word highlight ──────────────────────── */
+    .intro-body .word {
+      color: var(--accent);
+      transition: color 0.5s var(--ease);
+    }
+    .intro-body .word.lit { color: var(--text-primary); }
+
+    /* ── 9. Project card 3D tilt + shine ───────────────────────── */
+    .projects-grid { perspective: 1000px; }
+    .project-card { transform-style: preserve-3d; }
+    .card-shine {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      opacity: 0;
+      background: radial-gradient(
+        circle at var(--mx, 50%) var(--my, 50%),
+        rgba(255,255,255,0.10),
+        rgba(255,255,255,0) 55%
+      );
+      transition: opacity 0.3s var(--ease);
+      z-index: 2;
+    }
+    .project-card:hover .card-shine { opacity: 1; }
+    .project-card .project-tag,
+    .project-card .project-name,
+    .project-card .project-desc,
+    .project-card .project-link {
+      position: relative;
+      z-index: 3;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ── 10. Footer typographic backdrop ───────────────────────── */
+    footer { position: relative; overflow: hidden; }
+    .footer-bg-text {
+      position: absolute;
+      left: 50%; bottom: -2.2vw;
+      transform: translateX(-50%);
+      font-family: var(--font-head);
+      font-size: 15vw;
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: 0.02em;
+      color: rgba(245,240,232,0.04);
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 0;
+      will-change: transform;
+    }
+    .footer-inner { position: relative; z-index: 1; }
+    .footer-nav a { position: relative; }
+    .footer-nav a::after {
+      content: '';
+      position: absolute;
+      left: 50%; bottom: -4px;
+      width: 0; height: 1px;
+      background: var(--accent);
+      transform: translateX(-50%);
+      transition: width 0.3s var(--ease);
+    }
+    .footer-nav a:hover::after { width: 100%; }
+
+    /* ── Reduced-motion: disable transform/opacity choreography ── */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-name .char,
+      .split-line .char { opacity: 1 !important; transform: none !important; }
+      .heading-underline { transition: none !important; }
+      .grain-canvas, .hero-grain { display: none; }
+    }
+    /* Touch / no-hover: no custom cursor, no grain canvas */
+    @media (hover: none), (pointer: coarse) {
+      .cursor-dot, .cursor-ring, .grain-canvas { display: none !important; }
+    }
   </style>
 </head>
 
 <body>
+  <!-- Page fade overlay -->
   <div id="page-overlay"></div>
 
+  <!-- Custom cursor -->
+  <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" id="cursor-ring" aria-hidden="true">
+    <span class="cursor-label">Open</span>
+  </div>
+
+  <!-- Scroll progress -->
+  <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+
+  <!-- Film-grain overlay -->
+  <canvas class="grain-canvas" id="grain-canvas" aria-hidden="true"></canvas>
+
+  <!-- Section-transition wipe -->
+  <div class="wipe" id="wipe" aria-hidden="true">
+    <span class="wipe-label">Luke Loyd</span>
+  </div>
+
+  <!-- ═══════════════════════ NAV ═══════════════════════════════ -->
   <nav id="main-nav">
     <div class="nav-inner">
       <a href="#hero" class="nav-logo">Luke Loyd</a>
@@ -1123,6 +1439,7 @@
     </div>
   </nav>
 
+  <!-- Mobile menu -->
   <div class="mobile-menu" id="mobile-menu">
     <a href="#hero"          class="mobile-link">Home</a>
     <a href="#introduction"  class="mobile-link">About</a>
@@ -1131,7 +1448,15 @@
     <a href="#contact"       class="mobile-link">Contact</a>
   </div>
 
+  <!-- ═══════════════════════ HERO ══════════════════════════════ -->
   <section id="hero">
+    <div class="hero-bg-layer" id="hero-bg-layer" aria-hidden="true"></div>
+    <svg class="hero-grain" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <filter id="heroNoise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+      </filter>
+      <rect width="100%" height="100%" filter="url(#heroNoise)" />
+    </svg>
     <div class="hero-content">
       <h1 class="hero-name">Luke Loyd</h1>
       <p class="hero-subtitle" id="hero-subtitle"></p>
@@ -1146,16 +1471,22 @@
     </div>
   </section>
 
+  <!-- ═══════════════════════ INTRODUCTION ═════════════════════ -->
   <section id="introduction">
     <div class="container">
       <div class="intro-grid">
 
+        <!-- Left: photo -->
         <div class="intro-photo-col reveal">
           <div class="intro-photo-wrap" id="headshotWrap">
             <div class="intro-photo-placeholder" id="headshotPlaceholder">
               <span>Luke Loyd</span>
             </div>
-            <img src="headshot.jpg" alt="Luke Loyd" id="headshotImg" />
+            <img
+              src="headshot.jpg"
+              alt="Luke Loyd"
+              id="headshotImg"
+            />
           </div>
           <div class="intro-photo-meta">
             <div class="intro-photo-rule"></div>
@@ -1163,6 +1494,7 @@
           </div>
         </div>
 
+        <!-- Right: text -->
         <div class="intro-text-col">
           <p class="intro-label reveal from-right">Who I Am</p>
           <h2 class="intro-heading reveal from-right reveal-delay-1">
@@ -1198,7 +1530,7 @@
               </div>
               <div class="stat-lbl">Company Founded</div>
             </div>
-            <div class="intro-stat">
+<div class="intro-stat">
               <div class="stat-num">2027</div>
               <div class="stat-lbl">College Bound</div>
             </div>
@@ -1209,6 +1541,7 @@
     </div>
   </section>
 
+  <!-- ═══════════════════════ RESEARCH ══════════════════════════ -->
   <section id="research">
     <div style="
       min-height: 60vh;
@@ -1220,12 +1553,37 @@
       padding: 80px 40px;
       text-align: center;
     ">
-      <p style="font-family:'Jost',sans-serif;font-size:11px;font-weight:400;letter-spacing:.2em;text-transform:uppercase;color:#8B6343;margin-bottom:24px;">Research &amp; Writing</p>
-      <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(36px,6vw,60px);font-weight:300;color:#2C1F14;margin-bottom:20px;line-height:1.1;">Coming soon.</h2>
-      <p style="font-family:'Jost',sans-serif;font-size:15px;font-weight:300;color:#7A6555;max-width:400px;line-height:1.7;">I'm currently working on several pieces on finance, local economies, and business strategy. Check back soon.</p>
+      <p style="
+        font-family: 'Jost', sans-serif;
+        font-size: 11px;
+        font-weight: 400;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: #8B6343;
+        margin-bottom: 24px;
+      ">Research &amp; Writing</p>
+      <h2 style="
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(36px, 6vw, 60px);
+        font-weight: 300;
+        color: #2C1F14;
+        margin-bottom: 20px;
+        line-height: 1.1;
+      ">Coming soon.</h2>
+      <p style="
+        font-family: 'Jost', sans-serif;
+        font-size: 15px;
+        font-weight: 300;
+        color: #7A6555;
+        max-width: 400px;
+        line-height: 1.7;
+      ">I'm currently working on several pieces
+      on finance, local economies, and business
+      strategy. Check back soon.</p>
     </div>
   </section>
 
+  <!-- ═══════════════════════ PROJECTS ══════════════════════════ -->
   <section id="projects">
     <div class="container">
       <div class="projects-header">
@@ -1269,6 +1627,7 @@
     </div>
   </section>
 
+  <!-- ═══════════════════════ CONTACT ═══════════════════════════ -->
   <section id="contact">
     <div class="container">
       <div class="contact-inner">
@@ -1311,7 +1670,9 @@
     </div>
   </section>
 
+  <!-- ═══════════════════════ FOOTER ════════════════════════════ -->
   <footer>
+    <span class="footer-bg-text" id="footer-bg-text" aria-hidden="true">Luke Loyd</span>
     <div class="container footer-inner">
       <span class="footer-logo">Luke Loyd</span>
       <ul class="footer-nav">
@@ -1326,7 +1687,7 @@
     </div>
   </footer>
 
-  <!-- MODAL: THELOCALGRID -->
+  <!-- ═══════════════════════ MODAL: THELOCALGRID ══════════════ -->
   <div class="modal" id="modal-localgrid" role="dialog" aria-modal="true" aria-label="TheLocalGrid project details">
 
     <button class="modal-close" data-modal-close="modal-localgrid" aria-label="Close">
@@ -1336,6 +1697,7 @@
       </svg>
     </button>
 
+    <!-- Header -->
     <div class="modal-header">
       <div class="container">
         <p class="modal-eyebrow">Startup</p>
@@ -1344,6 +1706,7 @@
       </div>
     </div>
 
+    <!-- Section 1: What We Do, 2-col -->
     <div class="modal-section">
       <div class="container">
         <p class="modal-section-label">What We Do</p>
@@ -1364,6 +1727,7 @@
       </div>
     </div>
 
+    <!-- Section 2: Mission, bleed -->
     <div class="modal-bleed">
       <div class="modal-bleed-inner">
         <blockquote>
@@ -1373,6 +1737,7 @@
       </div>
     </div>
 
+    <!-- Section 3: The Brand / Logo parallax -->
     <div class="modal-logo-section" id="tlg-logo-section">
       <div class="modal-logo-parallax" id="tlg-logo-parallax">
         <img src="thelocalgrid-logo.png" alt="TheLocalGrid" id="tlg-logo-img" />
@@ -1380,6 +1745,7 @@
       </div>
     </div>
 
+    <!-- Section 4: Services & Impact, 2-col -->
     <div class="modal-section">
       <div class="container">
         <p class="modal-section-label">Services &amp; Impact</p>
@@ -1414,9 +1780,9 @@
       </div>
     </div>
 
-  </div>
+  </div><!-- /#modal-localgrid -->
 
-  <!-- MODAL: DECA -->
+  <!-- ═══════════════════════ MODAL: DECA ═══════════════════════ -->
   <div class="modal" id="modal-deca" role="dialog" aria-modal="true" aria-label="DECA Chapter President details">
 
     <button class="modal-close" data-modal-close="modal-deca" aria-label="Close">
@@ -1426,6 +1792,7 @@
       </svg>
     </button>
 
+    <!-- Header -->
     <div class="modal-header">
       <div class="container">
         <p class="modal-eyebrow">Leadership</p>
@@ -1434,6 +1801,7 @@
       </div>
     </div>
 
+    <!-- Section 1: Role Intro, 2-col with stats -->
     <div class="modal-section">
       <div class="container">
         <p class="modal-section-label">The Role</p>
@@ -1467,6 +1835,7 @@
       </div>
     </div>
 
+    <!-- Section 2: King William Fair, gallery -->
     <div class="modal-section" style="background: var(--bg-secondary);">
       <div class="container">
         <p class="modal-section-label">King William Fair</p>
@@ -1475,7 +1844,7 @@
             <h3 class="modal-col-heading">Taking our chapter to the community.</h3>
           </div>
           <div class="modal-col-body">
-            <p>The King William Fair is one of San Antonio's most beloved local events, and we brought DECA to it. Representing our chapter and engaging with the public was a lesson in real-world marketing that no textbook could teach.</p>
+            <p>The King William Fair is one of San Antonio's most beloved local events, and we brought DECA to it. Setting up a booth, representing our chapter, and engaging with the public was a lesson in real-world marketing that no textbook could teach.</p>
             <p>It was a chance for our members to put their skills to work outside the classroom and represent something they helped build.</p>
           </div>
         </div>
@@ -1496,6 +1865,7 @@
       </div>
     </div>
 
+    <!-- Section 3: Competition, 2-col with image -->
     <div class="modal-section">
       <div class="container">
         <p class="modal-section-label">Competition</p>
@@ -1518,12 +1888,14 @@
       </div>
     </div>
 
-  </div>
+  </div><!-- /#modal-deca -->
 
+  <!-- ═══════════════════════ SCRIPTS ═══════════════════════════ -->
   <script>
   (function () {
     'use strict';
 
+    /* ── Page Load Fade ──────────────────────────────────────── */
     window.addEventListener('load', () => {
       const overlay = document.getElementById('page-overlay');
       requestAnimationFrame(() => {
@@ -1532,6 +1904,7 @@
       });
     });
 
+    /* ── Nav: scroll state ───────────────────────────────────── */
     const nav = document.getElementById('main-nav');
     function updateNav() {
       nav.classList.toggle('scrolled', window.scrollY > 60);
@@ -1539,6 +1912,7 @@
     updateNav();
     window.addEventListener('scroll', updateNav, { passive: true });
 
+    /* ── Mobile Menu ─────────────────────────────────────────── */
     const toggle     = document.getElementById('nav-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
 
@@ -1559,27 +1933,37 @@
       if (e.key === 'Escape') closeMobileMenu();
     });
 
+    /* ── Headshot: show when loaded, hide placeholder ────────── */
     (function initHeadshot() {
       const img         = document.getElementById('headshotImg');
       const placeholder = document.getElementById('headshotPlaceholder');
       if (!img) return;
+
       function onLoad() {
         img.classList.add('loaded');
         if (placeholder) placeholder.style.display = 'none';
       }
-      function onError() { img.style.display = 'none'; }
-      if (img.complete && img.naturalWidth > 0) { onLoad(); }
-      else {
+      function onError() {
+        img.style.display = 'none';
+      }
+
+      if (img.complete && img.naturalWidth > 0) {
+        onLoad();
+      } else {
         img.addEventListener('load',  onLoad);
         img.addEventListener('error', onError);
       }
     })();
 
+    /* ── Hero Typewriter ─────────────────────────────────────── */
     (function initTypewriter() {
       const el   = document.getElementById('hero-subtitle');
       const text = 'Finance & Accounting. Founder. Builder.';
       let i = 0;
-      function cursor() { return '<span class="cursor"></span>'; }
+
+      function cursor() {
+        return '<span class="cursor"></span>';
+      }
       function type() {
         if (i <= text.length) {
           el.innerHTML = text.slice(0, i) + cursor();
@@ -1594,6 +1978,7 @@
       setTimeout(type, 1300);
     })();
 
+    /* ── Scroll Reveal (IntersectionObserver) ────────────────── */
     const revealObs = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -1602,8 +1987,10 @@
         }
       });
     }, { threshold: 0.1 });
+
     document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
+    /* ── Counter Animation ───────────────────────────────────── */
     const counterObs = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
@@ -1612,8 +1999,10 @@
         if (!valEl) return;
         const target = parseInt(block.dataset.target, 10);
         if (isNaN(target)) return;
+
         const dur   = 1400;
         const start = performance.now();
+
         function update(now) {
           const t      = Math.min((now - start) / dur, 1);
           const eased  = 1 - Math.pow(1 - t, 3);
@@ -1624,32 +2013,42 @@
         counterObs.unobserve(block);
       });
     }, { threshold: 0.5 });
+
     document.querySelectorAll('[data-target]').forEach(el => counterObs.observe(el));
 
+    /* ── Active Nav Link ─────────────────────────────────────── */
     (function initActiveNav() {
       const sections = document.querySelectorAll('section[id]');
       const links    = document.querySelectorAll('.nav-links a[href^="#"]');
+
       function setActive(id) {
         links.forEach(a => {
           a.classList.toggle('active', a.getAttribute('href') === '#' + id);
         });
       }
+
       const obs = new IntersectionObserver(entries => {
-        entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id); });
+        entries.forEach(e => {
+          if (e.isIntersecting) setActive(e.target.id);
+        });
       }, { rootMargin: '-40% 0px -55% 0px' });
+
       sections.forEach(s => obs.observe(s));
     })();
 
+    /* ── Contact Form ────────────────────────────────────────── */
     (function initForm() {
       const form = document.querySelector('#contact form');
       if (!form) return;
       const btn  = form.querySelector('.btn-send');
+
       form.addEventListener('submit', e => {
         btn.textContent = 'Sending…';
         btn.disabled = true;
       });
     })();
 
+    /* ── Smooth Scroll ───────────────────────────────────────── */
     document.querySelectorAll('a[href^="#"]').forEach(link => {
       link.addEventListener('click', e => {
         const href = link.getAttribute('href');
@@ -1662,6 +2061,7 @@
       });
     });
 
+    /* ── Project Card Modals ─────────────────────────────────── */
     (function initModals() {
       let activeModal = null;
       let scrollPos  = 0;
@@ -1669,11 +2069,13 @@
       function openModal(id) {
         const modal = document.getElementById(id);
         if (!modal) return;
+
         scrollPos = window.scrollY;
         document.body.style.top      = `-${scrollPos}px`;
         document.body.style.position = 'fixed';
         document.body.style.width    = '100%';
         document.body.style.overflow = 'hidden';
+
         modal.scrollTop = 0;
         modal.classList.remove('closing');
         modal.classList.add('open');
@@ -1685,11 +2087,13 @@
         if (!modal) return;
         modal.classList.add('closing');
         modal.classList.remove('open');
+
         document.body.style.position = '';
         document.body.style.top      = '';
         document.body.style.width    = '';
         document.body.style.overflow = '';
         window.scrollTo(0, scrollPos);
+
         activeModal = null;
       }
 
@@ -1725,10 +2129,11 @@
             tlgFallback.style.display = '';
           }
         }
+
         document.querySelectorAll('.gallery-img').forEach(img => {
           function handleErr() {
             img.classList.add('hidden');
-            const wrap     = img.closest('.modal-gallery-item, .modal-col-image');
+            const wrap    = img.closest('.modal-gallery-item, .modal-col-image');
             const fallback = wrap && wrap.querySelector('.gallery-fallback, .img-fallback');
             if (fallback) fallback.style.zIndex = '1';
           }
@@ -1748,13 +2153,320 @@
           const sectionTop    = logoSection.offsetTop;
           const sectionHeight = logoSection.offsetHeight;
           const scrollTop     = tlgModal.scrollTop;
+
           const raw      = (scrollTop - sectionTop) / (sectionHeight * 0.6);
           const progress = Math.max(0, Math.min(1, raw));
+
           logoEl.style.opacity   = Math.max(0, 1 - progress * 1.5);
           logoEl.style.transform = 'translateY(' + (progress * -60) + 'px) scale(' + (1 - progress * 0.08) + ')';
         }, { passive: true });
       })();
     })();
+
+  })();
+  </script>
+
+  <!-- ═══════════════ MOTION & INTERACTION UPGRADE ══════════════ -->
+  <script>
+  (function () {
+    'use strict';
+
+    const reduce      = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const body        = document.body;
+    const lerp = (a, b, n) => a + (b - a) * n;
+
+    function splitChars(el) {
+      const frag = document.createDocumentFragment();
+      (function process(src, dest) {
+        src.childNodes.forEach(n => {
+          if (n.nodeType === 3) {
+            n.textContent.split('').forEach(ch => {
+              if (ch === ' ') {
+                dest.appendChild(document.createTextNode(' '));
+              } else {
+                const s = document.createElement('span');
+                s.className = 'char';
+                s.textContent = ch;
+                dest.appendChild(s);
+              }
+            });
+          } else if (n.nodeType === 1) {
+            if (n.tagName === 'BR') {
+              dest.appendChild(document.createElement('br'));
+            } else {
+              const clone = n.cloneNode(false);
+              process(n, clone);
+              dest.appendChild(clone);
+            }
+          }
+        });
+      })(el, frag);
+      el.innerHTML = '';
+      el.appendChild(frag);
+    }
+
+    /* 1. CUSTOM CURSOR */
+    if (finePointer && !reduce) {
+      document.documentElement.classList.add('has-cursor');
+      const dot  = document.getElementById('cursor-dot');
+      const ring = document.getElementById('cursor-ring');
+      let mx = window.innerWidth / 2,  my = window.innerHeight / 2;
+      let dx = mx, dy = my, rx = mx, ry = my;
+      let started = false;
+
+      window.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        if (!started) { started = true; body.classList.add('cursor-ready'); }
+      });
+
+      (function raf() {
+        dx = lerp(dx, mx, 0.12); dy = lerp(dy, my, 0.12);
+        rx = lerp(rx, mx, 0.06); ry = lerp(ry, my, 0.06);
+        dot.style.transform  = `translate(${dx}px, ${dy}px)`;
+        ring.style.transform = `translate(${rx}px, ${ry}px)`;
+        requestAnimationFrame(raf);
+      })();
+
+      document.addEventListener('mouseover', e => {
+        const t = e.target;
+        if (t.closest('.project-card')) {
+          body.classList.add('cursor-project');
+          body.classList.remove('cursor-link');
+        } else if (t.closest('a, button, input, textarea, .magnetic')) {
+          body.classList.add('cursor-link');
+          body.classList.remove('cursor-project');
+        } else {
+          body.classList.remove('cursor-link', 'cursor-project');
+        }
+      });
+      document.addEventListener('mouseleave', () => body.classList.remove('cursor-ready'));
+      document.addEventListener('mouseenter', () => { if (started) body.classList.add('cursor-ready'); });
+    }
+
+    /* 2. HERO — cinematic char entrance */
+    (function heroEntrance() {
+      const name = document.querySelector('.hero-name');
+      if (!name) return;
+      name.classList.add('is-split');
+      splitChars(name);
+      const chars = name.querySelectorAll('.char');
+      if (reduce) { chars.forEach(c => c.classList.add('in')); return; }
+      chars.forEach((c, i) => { c.style.transitionDelay = (i * 0.04) + 's'; });
+      requestAnimationFrame(() => {
+        setTimeout(() => chars.forEach(c => c.classList.add('in')), 400);
+      });
+    })();
+
+    /* Hero background parallax drift */
+    if (finePointer && !reduce) {
+      const layer = document.getElementById('hero-bg-layer');
+      const hero  = document.getElementById('hero');
+      if (layer && hero) {
+        hero.addEventListener('mousemove', e => {
+          const x = (e.clientX / window.innerWidth  - 0.5) * 2;
+          const y = (e.clientY / window.innerHeight - 0.5) * 2;
+          layer.style.transform = `translate(${x * 20}px, ${y * 10}px)`;
+        });
+        hero.addEventListener('mouseleave', () => { layer.style.transform = ''; });
+      }
+    }
+
+    /* 3. MAGNETIC BUTTONS & NAV LINKS */
+    if (finePointer && !reduce) {
+      const mags = [...document.querySelectorAll('.btn-hero, .nav-links a')];
+      mags.forEach(el => el.classList.add('magnetic'));
+      const RADIUS = 80, MAXPULL = 12;
+      window.addEventListener('mousemove', e => {
+        mags.forEach(el => {
+          const r  = el.getBoundingClientRect();
+          const cx = r.left + r.width / 2;
+          const cy = r.top  + r.height / 2;
+          const dx = e.clientX - cx;
+          const dy = e.clientY - cy;
+          const dist = Math.hypot(dx, dy);
+          if (dist < RADIUS) {
+            const pull = (1 - dist / RADIUS) * MAXPULL;
+            const ang  = Math.atan2(dy, dx);
+            el.style.transform =
+              `translate(${Math.cos(ang) * pull}px, ${Math.sin(ang) * pull}px) scale(1.04)`;
+          } else if (el.style.transform) {
+            el.style.transform = '';
+          }
+        });
+      }, { passive: true });
+    }
+
+    /* 4. SCROLL-TRIGGERED HEADINGS */
+    (function headingReveals() {
+      const headings = document.querySelectorAll(
+        '.section-title, .contact-headline, .intro-heading'
+      );
+      headings.forEach(h => {
+        h.classList.remove('reveal', 'from-right', 'visible', 'reveal-delay-1', 'reveal-delay-2', 'reveal-delay-3');
+        h.classList.add('split-line');
+        splitChars(h);
+        const ul = document.createElement('span');
+        ul.className = 'heading-underline';
+        h.appendChild(ul);
+      });
+
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          const h = e.target;
+          h.querySelectorAll('.char').forEach((c, i) => {
+            c.style.transitionDelay = (i * 0.025) + 's';
+          });
+          h.classList.add('in');
+          const ul = h.querySelector('.heading-underline');
+          if (ul) ul.classList.add('in');
+          obs.unobserve(h);
+        });
+      }, { threshold: 0.15 });
+      headings.forEach(h => obs.observe(h));
+    })();
+
+    /* 5. ABOUT — word-by-word highlight */
+    if (!reduce) {
+      const paras = document.querySelectorAll('.intro-body p');
+      paras.forEach(p => {
+        const parts = p.textContent.split(/(\s+)/);
+        p.innerHTML = '';
+        parts.forEach(w => {
+          if (/^\s+$/.test(w) || w === '') {
+            p.appendChild(document.createTextNode(w));
+          } else {
+            const s = document.createElement('span');
+            s.className = 'word';
+            s.textContent = w;
+            p.appendChild(s);
+          }
+        });
+      });
+      const wordObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('lit');
+            wordObs.unobserve(e.target);
+          }
+        });
+      }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+      document.querySelectorAll('.intro-body .word').forEach(w => wordObs.observe(w));
+    }
+
+    /* 6. PROJECT CARDS — 3D tilt + shine */
+    if (finePointer && !reduce) {
+      document.querySelectorAll('.project-card').forEach(card => {
+        const shine = document.createElement('div');
+        shine.className = 'card-shine';
+        card.appendChild(shine);
+        const inner = [...card.querySelectorAll(
+          '.project-tag, .project-name, .project-desc, .project-link'
+        )];
+
+        card.addEventListener('mousemove', e => {
+          const r  = card.getBoundingClientRect();
+          const px = (e.clientX - r.left) / r.width;
+          const py = (e.clientY - r.top)  / r.height;
+          const rx = (0.5 - py) * 16;
+          const ry = (px - 0.5) * 16;
+          card.style.transition = 'transform 0.08s var(--ease)';
+          card.style.transform =
+            `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-3px)`;
+          shine.style.setProperty('--mx', (px * 100) + '%');
+          shine.style.setProperty('--my', (py * 100) + '%');
+          inner.forEach(el => {
+            el.style.transform = `translate(${(px - 0.5) * 12}px, ${(py - 0.5) * 12}px)`;
+          });
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+          card.style.transform  = '';
+          inner.forEach(el => { el.style.transform = ''; });
+        });
+      });
+    }
+
+    /* 7. SCROLL PROGRESS */
+    (function scrollProgress() {
+      const bar = document.getElementById('scroll-progress');
+      if (!bar) return;
+      function update() {
+        const doc = document.documentElement;
+        const max = doc.scrollHeight - doc.clientHeight;
+        const sy  = window.scrollY || doc.scrollTop;
+        bar.style.width = (max > 0 ? (sy / max) * 100 : 0) + '%';
+        bar.classList.toggle('visible', sy > 40);
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+
+    /* 8. FILM-GRAIN CANVAS */
+    if (finePointer && !reduce) {
+      const canvas = document.getElementById('grain-canvas');
+      const ctx = canvas && canvas.getContext('2d');
+      if (ctx) {
+        let w, h;
+        function resize() {
+          w = canvas.width  = Math.ceil(window.innerWidth  / 1.6);
+          h = canvas.height = Math.ceil(window.innerHeight / 1.6);
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        let last = 0;
+        const FRAME = 1000 / 24;
+        function draw(t) {
+          requestAnimationFrame(draw);
+          if (t - last < FRAME) return;
+          last = t;
+          const img = ctx.createImageData(w, h);
+          const d = img.data;
+          for (let i = 0; i < d.length; i += 4) {
+            const v = (Math.random() * 255) | 0;
+            d[i] = d[i + 1] = d[i + 2] = v;
+            d[i + 3] = 255;
+          }
+          ctx.putImageData(img, 0, 0);
+        }
+        requestAnimationFrame(draw);
+      }
+    }
+
+    /* 9. SECTION-TRANSITION WIPE */
+    if (!reduce) {
+      const wipe = document.getElementById('wipe');
+      if (wipe) {
+        let wiping = false;
+        function play() {
+          if (wiping) return;
+          wiping = true;
+          wipe.classList.remove('active');
+          void wipe.offsetWidth;
+          wipe.classList.add('active');
+          setTimeout(() => { wipe.classList.remove('active'); wiping = false; }, 650);
+        }
+        document.querySelectorAll('.nav-links a, .footer-nav a, .mobile-link')
+          .forEach(a => a.addEventListener('click', play));
+      }
+    }
+
+    /* 10. FOOTER — typographic backdrop parallax */
+    if (!reduce) {
+      const ft     = document.getElementById('footer-bg-text');
+      const footer = document.querySelector('footer');
+      if (ft && footer) {
+        window.addEventListener('scroll', () => {
+          const r = footer.getBoundingClientRect();
+          if (r.top < window.innerHeight && r.bottom > 0) {
+            const prog = (window.innerHeight - r.top) / (window.innerHeight + r.height);
+            ft.style.transform = `translateX(-50%) translateY(${-prog * 60}px)`;
+          }
+        }, { passive: true });
+      }
+    }
 
   })();
   </script>
